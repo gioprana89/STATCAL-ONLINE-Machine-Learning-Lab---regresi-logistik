@@ -1,47 +1,58 @@
-# STATCAL ONLINE — Machine Learning Lab: Logistic Regression
+# STATCAL ONLINE — Machine Learning Lab
+## Praktikum 4 Pertanyaan Regresi Logistik (Bab 1)
 
-**Praktikum 1: Prediksi Kelulusan Mata Kuliah Mahasiswa (data sintetis).**
+Ini adalah **versi modifikasi** aplikasi yang mengikuti empat pertanyaan praktikum pertama:
 
-## Struktur paket
+1. **True Positive (TP):** Berapa mahasiswa yang diprediksi Tidak Lulus dengan benar?
+2. **False Negative (FN):** Berapa mahasiswa yang sebenarnya Tidak Lulus tetapi keliru diprediksi Lulus?
+3. **Recall:** Seberapa baik model mengenali mahasiswa berisiko Tidak Lulus?
+4. **Probabilitas Profil:** Berapa probabilitas seorang mahasiswa diprediksi Tidak Lulus?
 
-- `app.py` — seluruh kode aplikasi Streamlit.
-- `dataset_mahasiswa.csv` — dataset simulasi 1.000 mahasiswa yang digunakan pada contoh.
-- `requirements.txt` — dependensi untuk Streamlit Community Cloud atau lokal.
+Empat jawaban tersedia pada **tab terpisah**. Ada tab *Kasus & Data* untuk melihat data training/testing dan tab *Laporan Excel* untuk mengunduh seluruh hasil.
 
-## Cara menjalankan (Windows / komputer lokal)
+## Isi paket
+- `app.py`: antarmuka aplikasi Streamlit
+- `ml_core.py`: pemodelan regresi logistik dan generator file Excel
+- `dataset_mahasiswa.csv`: dataset sintetis 1.000 mahasiswa
+- `requirements.txt`: dependensi
 
-1. Pasang Python versi 3.10 atau lebih baru.
-2. Buka Terminal/Command Prompt di folder paket.
-3. Jalankan `python -m pip install -r requirements.txt`.
-4. Jalankan `python -m streamlit run app.py`.
-5. Buka URL lokal yang ditampilkan Streamlit (umumnya `http://localhost:8501`).
+## Jalankan di komputer Windows
 
-## Cara deploy di Streamlit Community Cloud
+```bash
+python -m pip install -r requirements.txt
+python -m streamlit run app.py
+```
 
-1. Buat repository GitHub dan unggah tiga file di atas ke root repository.
-2. Di Streamlit Community Cloud, pilih repository dan file utama `app.py`.
-3. Deploy. Aplikasi otomatis memakai `dataset_mahasiswa.csv` dan juga menerima upload CSV/XLSX.
+Letakkan semua file dalam folder yang **sama**. Pilih `app.py` sebagai file utama saat deploy ke Streamlit Community Cloud, dan unggah `ml_core.py` serta `dataset_mahasiswa.csv` dalam repository yang sama.
 
-## Tujuan belajar
+## Pengaturan awal untuk mengikuti materi buku
+- Target (Y): `Kelulusan_MK`
+- Kelas positif (1): `Tidak Lulus`
+- Variabel X: seluruh 8 variabel prediktor yang tersedia
+- Data training 80%, testing 20%
+- Threshold 0,50
+- C 1,0, bobot kelas normal, random seed 42
 
-1. Mengenali dataset dan variabel X/Y.
-2. Memahami pembagian training dan testing yang terstratifikasi.
-3. Melatih Logistic Regression menggunakan pipeline preprocessing (imputasi, standardisasi, dan one-hot encoding).
-4. Mengevaluasi accuracy, precision, recall, F1, ROC-AUC, dan confusion matrix.
-5. Mengubah threshold dan membandingkan hasil.
-6. Mengisi lembar pertanyaan investigasi dan mengunduh jawaban.
+## Cara menggunakan
+1. Jika mengunggah file `.xlsx` dengan banyak sheet, pilih **DATA_MAHASISWA** (secara otomatis dipilih jika ada).
+2. Buka **Kasus & Data** untuk melihat data lengkap, training, dan testing.
+3. Buka **Q1**, **Q2**, dan **Q3** untuk melihat TP, FN, serta Recall berdasarkan data testing.
+4. Buka **Q4**, masukkan contoh profil lalu klik **Hitung Probabilitas Profil**.
+5. Terakhir, masuk ke **Laporan Excel**, lalu unduh file `.xlsx` yang berisi hasil semua pertanyaan dan data training/testing lengkap.
 
-## Catatan metodologis
+## Isi workbook Excel (11 worksheet)
+1. `Ringkasan` — hasil inti dan informasi konfigurasi.
+2. `Pertanyaan & Jawaban` — jawaban numerik dan interpretasi 4 pertanyaan.
+3. `Pengaturan Model` — konfigurasi split dan model.
+4. `Data Lengkap` — semua observasi serta penanda training/testing.
+5. `Data Training` — dataset yang dipakai melatih model.
+6. `Data Testing` — dataset yang dipakai mengevaluasi model **beserta prediksi**.
+7. `Prediksi Testing` — tabel ringkas probabilitas, prediksi, dan TP/TN/FP/FN.
+8. `Metrik Evaluasi` — accuracy, precision, recall, F1-score, ROC-AUC, dan baseline.
+9. `Simulasi Profil` — input contoh dan probabilitas hasil Q4 (jika sudah dijalankan).
+10. `Kamus Variabel` — deskripsi variabel.
+11. `Confusion Matrix` — matriks aktual vs prediksi.
 
-- Default kelas positif ialah **Tidak Lulus** agar recall dapat diinterpretasikan sebagai proporsi mahasiswa berisiko yang berhasil dikenali model.
-- ID mahasiswa tidak digunakan sebagai fitur model.
-- Semua transformasi data dipelajari dari **training set** melalui scikit-learn `Pipeline`.
-- Evaluasi memakai satu hold-out stratified split. Hasil berubah jika pengaturan dan ukuran data testing berubah; angka tidak otomatis bisa dibandingkan secara kausal.
-- Probabilitas klasifikasi tidak merupakan kepastian; threshold mengubah label prediksi, bukan peluang yang sudah dihasilkan model.
-- Data sintetis ini hanya untuk pembelajaran; jangan gunakan untuk keputusan nyata mengenai mahasiswa.
+**Catatan penting:** data training ditampilkan dalam bentuk aslinya, bukan fitur numerik hasil encoding/standardisasi. Prediksi dan nilai evaluasi dihitung pada data testing. Jika belum menjalankan Q4, sel hasil simulasi profil dalam laporan akan menunjukkan status “Belum dijalankan”.
 
-## Referensi teknis
-
-- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html
-- https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html
-- https://docs.streamlit.io/develop/api-reference
+Dataset bawaan **sintetis** dan untuk keperluan pembelajaran saja. Prediksi bukan kepastian atau landasan keputusan akademik terhadap mahasiswa sungguhan.
